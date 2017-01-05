@@ -1,0 +1,109 @@
+{
+  "Description": "Image processing service.",
+  "Parameters" : {
+    "ImageBucketName" : {
+        "Type" : "String",
+        "Default" : "serverless-blueprint-image-bucket",
+        "Description" : "Name of S3 bucket used to store the image content. If left blank a new bucket will be created.",
+        "MinLength" : "0"
+    },
+    "ImageTableName" : {
+        "Type" : "String",
+        "Default" : "serverless-blueprint-image-table",
+        "Description" : "Name of DynamoDB table used to store the image metadata. If left blank a new table will be created.",
+        "MinLength" : "0"
+      },
+    "ReadCapacity" : {
+        "Type" : "Number",
+        "Description" : "Read capacity for the DynamoDB blog table.",
+        "Default" : "3",
+        "MinValue" : 1
+    },
+    "WriteCapacity" : {
+        "Type" : "Number",
+        "Description" : "Write capacity for the DynamoDB blog table.",
+        "Default" : "3",
+        "MinValue" : 1
+    }
+  },
+  "Resources": {
+    "GetImage": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "GetImage",
+        "Policies": [
+          "AmazonDynamoDBReadOnlyAccess",
+          "AmazonS3ReadOnlyAccess"
+        ],
+        "Environment" : {
+          "Variables" : {
+            "IMAGE_TABLE_NAME" : { "Ref" : "ImageTableName" },
+            "IMAGE_BUCKET_NAME" : { "Ref" : "ImageBucketName" }
+          }
+        },
+        "Events": {
+          "GetResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "get"
+            }
+          }
+        }
+      }
+    },
+    "PutImage": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "PutImage",
+        "Policies": [
+          "AmazonDynamoDBFullAccess",
+          "AmazonS3FullAccess"
+        ],
+        "Environment" : {
+          "Variables" : {
+            "IMAGE_TABLE_NAME" : { "Ref" : "ImageTableName" },
+            "IMAGE_BUCKET_NAME" : { "Ref" : "ImageBucketName" }
+          }
+        },
+        "Events": {
+          "PutResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "post"
+            }
+          }
+        }
+      }
+    },
+    "ImageTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": {"Ref" : "ReadCapacity"},
+          "WriteCapacityUnits": {"Ref" : "WriteCapacity"}
+        },
+        "TableName": {"Ref" : "ImageTableName"}
+      }
+    },
+    "ImageBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {"Ref" : "ImageBucketName"}
+      }
+    }
+  }
+}

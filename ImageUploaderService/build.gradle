@@ -1,0 +1,43 @@
+buildscript {
+	
+	repositories {		
+		maven {
+            url "https://artifacts.alfresco.com/nexus/content/repositories/public"
+        }
+        mavenCentral()
+	}
+	
+	
+}
+
+repositories {
+	maven {
+            url "https://artifacts.alfresco.com/nexus/content/repositories/public"
+        }
+	mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+
+jar {
+	baseName = 'image-uploader'
+	version = '0.0.1-SNAPSHOT'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+
+    compile group: 'com.googlecode.javacv', name: 'javacv', version: '0.1'
+	compile group: 'junit', name: 'junit', version: '4.4'
+}
+
+
+eclipse {
+	classpath {
+		 containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')
+		 containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8'
+	}
+}
