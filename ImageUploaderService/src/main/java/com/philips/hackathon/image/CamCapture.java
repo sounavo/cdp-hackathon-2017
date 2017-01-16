@@ -1,39 +1,35 @@
 package com.philips.hackathon.image;
 
-import static com.googlecode.javacv.cpp.opencv_core.cvFlip;
-import static com.googlecode.javacv.cpp.opencv_highgui.cvSaveImage;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
-import com.googlecode.javacv.CanvasFrame;
-import com.googlecode.javacv.FrameGrabber;
-import com.googlecode.javacv.VideoInputFrameGrabber;
-import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import javax.imageio.ImageIO;
+
+import com.github.sarxos.webcam.Webcam;
 
 public class CamCapture implements Runnable {
-    final int INTERVAL=1000;
-    IplImage image;
-    CanvasFrame canvas = new CanvasFrame("Web Cam");
+   
     public CamCapture() {
-        canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        //canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
     @Override
     public void run() {
-        FrameGrabber grabber = new VideoInputFrameGrabber(0); 
-        int i=0;
-        try {
-            grabber.start();
-            IplImage img;
-            while (true) {
-                img = grabber.grab();
-                if (img != null) {
-                    cvFlip(img, img, 1);// l-r = 90_degrees_steps_anti_clockwise
-                    cvSaveImage((i++)+"-capture.jpg", img);
-                    // show image on window
-                    canvas.showImage(img);
-                }
-                 Thread.sleep(INTERVAL);
-            }
-        } catch (Exception e) {
-       }        
+    	Webcam webcam = Webcam.getDefault();
+    	webcam.open();
+    	//webcam.setViewSize(new Dimension(1024, 768));
+    	while (true) {
+    		BufferedImage image = webcam.getImage();
+        	try {
+    			ImageIO.write(image, "JPG", new File("./images/"+System.currentTimeMillis()+".jpg"));
+    			TimeUnit.SECONDS.sleep(5);
+    		} catch (IOException | InterruptedException e) {
+    			e.printStackTrace();
+    		}  
+        	
+    	}
+    	
     }
     
     public static void main(String args[]) {
