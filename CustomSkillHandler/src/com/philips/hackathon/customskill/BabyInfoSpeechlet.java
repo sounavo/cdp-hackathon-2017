@@ -24,6 +24,7 @@ public class BabyInfoSpeechlet implements Speechlet {
     private static final String IS_MY_BABY_INTENT = "IsMyBabyIntent";
     private static final String WHEM_DID_INTENT = "WhenDidMyBabyIntent";
     private static final String HOW_MUCH_DID_MY_BABY_INTENT = "HowMuchDidMyBabyIntent";
+    private static final String WHEN_DOES_INTENT = "WhenDoesMyBabyIntent";
     
     // Slots
     private static final String ACTITITY_SLOT = "activity";
@@ -63,11 +64,33 @@ public class BabyInfoSpeechlet implements Speechlet {
 	       /* case BYE_INTENT:
 	        	return byeIntentHandler(session);	*/
 	        	
+	        case WHEN_DOES_INTENT:
+                return whenDoesIntentHAndler(session, intent);
 	        default:
 	        	throw new SpeechletException("Invalid Intent");
         }
 	}
 
+	private SpeechletResponse whenDoesIntentHAndler(Session session, Intent intent) {
+        String activity = intent.getSlot(ACTITITY_SLOT).getValue();
+
+        switch(activity) {
+            case "need to go to sleep":
+                String babyOfSixMonthsStretchesBetweenNaps = "This is different for every baby, but a baby of 6 months can have stretches of 2 to 4 hours between naps. Your baby is awake for 3 and a half hour.";
+                return getSpeechletBabyNeedsToGoToSleep(babyOfSixMonthsStretchesBetweenNaps);
+                          
+        }
+
+        return getWelcomeResponse();
+    }
+	
+	private SpeechletResponse getSpeechletBabyNeedsToGoToSleep(String answer) {
+        String speechText = answer;
+        String repromptText = speechText;
+        
+        return getSpeechletResponse(speechText, repromptText, true);
+    }
+	
 	private SpeechletResponse isMyIntentHandler(Session session, Intent intent) {
 		String activity = intent.getSlot(ACTITITY_SLOT).getValue();
 		String time = intent.getSlot(TIME_SLOT).getValue();
