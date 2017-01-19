@@ -1,0 +1,42 @@
+{
+  "intents": [
+    {
+      "intent": "IsMyBabyIntent",
+      "slots":[
+        {
+          "name": "activity",
+          "type": "LIST_ACTIVITY"
+        }
+      ]
+     },
+    {
+    "intent": "WhenDidMyBabyIntent",
+      "slots":[
+        {
+          "name": "activity",
+          "type": "LIST_ACTIVITY"
+        },
+        {
+          "name": "time",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+    {
+    "intent": "HowMuchDidMyBabyIntent",
+      "slots":[
+        {
+          "name": "activity",
+          "type": "LIST_ACTIVITY"
+        },
+        {
+          "name": "time",
+          "type": "AMAZON.DATE"
+        }
+      ]
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+IsMyBabyIntent Is my baby {activity}
+WhenDidMyBabyIntent When did my baby {activity}
+WhenDidMyBabyIntent When did my baby {activity} {time}
+HowMuchDidMyBabyIntent How much did my baby {activity}
+HowMuchDidMyBabyIntent How much did my baby {activity} {time}
+HowMuchDidMyBabyIntent How much did my baby {activity} in {time}
